@@ -65,7 +65,7 @@ xs !! n = head ( drop n xs )
 -- HINT: use the `div` function instead of / to do integer division when dividing the length of the list
 --       by 2, then take or drop those amount of elements from the list
 firstHalf :: [a] -> [a]
-firstHalf xs = reverse ( drop ( (div (length xs + 1) 2 )) ( reverse xs ))
+firstHalf xs = reverse ( drop ( ( div (length xs + 1) 2 )) ( reverse xs ))
 
 lastHalf :: [a] -> [a]
 lastHalf xs = drop ( ( length xs ) - ( div ( length xs + 1 ) 2 ) ) xs
