@@ -23,10 +23,10 @@ import Prelude hiding ((||),(&&),abs)
 --    SUBMITTING, FAILURE TO DO SO WILL RESULT IN A MARK OF 0
 -- 4) REPLACE macid = "TODO" WITH YOUR ACTUAL MACID (EX. IF YOUR MACID IS jim THEN macid = "jim")
 -----------------------------------------------------------------------------------------------------------
-macid = "TODO"
+macid = "gupta67"
 
 -- NOTE see the wikipedia page on truth tables https://en.wikipedia.org/wiki/Truth_table
---      (patricularly the sections Logical conjuction, Logical disjunction, etc) for a reference
+--      (particularly the sections Logical conjuction, Logical disjunction, etc) for a reference
 --      on the different boolean operators
 
 -- Exercise A
@@ -36,28 +36,39 @@ macid = "TODO"
 --      the type decleration
 -----------------------------------------------------------------------------------------------------------
 (||) :: Bool -> Bool -> Bool
-x || y = error "TODO implement ||"
+False || False = False 
+x || y = True
+
+-- Alternatively:
+-- (||) :: Bool -> Bool -> Bool
+-- x || y = case (x, y) of
+--           (False, False)  -> False
+--           _               -> True
 
 -- Exercise B
 -----------------------------------------------------------------------------------------------------------
 -- Implement Logical conjunction (AND) using pattern matching
 -----------------------------------------------------------------------------------------------------------
 (&&) :: Bool -> Bool -> Bool
-x && y = error "TODO implement &&"
+True && True = True
+x && y = False
 
 -- Exercise C
 -----------------------------------------------------------------------------------------------------------
 -- Implement Logical implication using pattern matching
 -----------------------------------------------------------------------------------------------------------
 (==>) :: Bool -> Bool -> Bool
-x ==> y = error "TODO implement ==>"
+True ==> False = False
+x ==> y = True
 
 -- Exercise D
 -----------------------------------------------------------------------------------------------------------
 -- Implement the function abs that returns the absolute value of a number
 -----------------------------------------------------------------------------------------------------------
 abs :: (Num a,Ord a) => a -> a
-abs x = error "TODO implement abs"
+abs x 
+  | x < 0       = -x
+  | otherwise   = x
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------
@@ -68,14 +79,15 @@ abs x = error "TODO implement abs"
 --        HOWEVER, you'll need to adjust the tolerance to suit different contexts
 -----------------------------------------------------------------------------------------------------------
 (=.) :: (Floating a,Ord a) => a -> a -> Bool
-x =. y = error "TODO implement =."
+x =. y = abs(x - y) <= 1e-4 
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------
 -- Implement a function stack that takes the first element of a list and moves it to the back
 -----------------------------------------------------------------------------------------------------------
 stack :: [a] -> [a]
-stack xs = error "TODO implement stack"
+stack [] = []
+stack (x:xs) = xs ++ [x] -- : operator to separate the head from the tail
 
 -- Exercise G
 -----------------------------------------------------------------------------------------------------------
@@ -84,4 +96,7 @@ stack xs = error "TODO implement stack"
 -- NOTE use the map function combined with a lambda expression to do the division
 -----------------------------------------------------------------------------------------------------------
 halves :: Integral a => [a] -> [a]
-halves xs = error "TODO implement halves"
+-- halves xs = map (\x -> div x 2) xs
+
+halves [] = []
+halves (x:xs) = [div x 2] ++ halves xs -- recursive definition
