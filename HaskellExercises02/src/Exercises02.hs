@@ -97,6 +97,7 @@ stack (x:xs) = xs ++ [x] -- : operator to separate the head from the tail
 -----------------------------------------------------------------------------------------------------------
 halves :: Integral a => [a] -> [a]
 -- halves xs = map (\x -> div x 2) xs
+-- halves xs = [ div x 2 | x <- xs ]
 
 halves [] = []
 halves (x:xs) = [div x 2] ++ halves xs -- recursive definition
