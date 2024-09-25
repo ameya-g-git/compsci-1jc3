@@ -1,3 +1,9 @@
+/Users/ameyagupta/.ghcup/ghc/9.6.6/lib/ghc-9.6.6/lib/aarch64-osx-ghc-9.6.6/rts-1.0.2/include/ghcversion.h:
+  hash: 9032f6afc97dcddfe8c8b306639eb6f456e3f6667f3dd8268681f51bb77c8634
+? /Users/ameyagupta/Desktop/repos/compsci-1jc3/1JC3-Assign1/.stack-work/dist/aarch64-osx/ghc-9.6.6/build/autogen/Paths_1JC3_Assign1.hs
+: hash: ec576f4d090ae1fe9a9635d086faa6303c021daf6de576f7c75462b203e2c3ea
+/Users/ameyagupta/Desktop/repos/compsci-1jc3/1JC3-Assign1/.stack-work/dist/aarch64-osx/ghc-9.6.6/build/autogen/cabal_macros.h:
+  hash: a590187d98bb67b38e9b2658f14ad500762b74cae62b42e2d1c81fb19ffe8f4e
 /Users/ameyagupta/Desktop/repos/compsci-1jc3/1JC3-Assign1/1JC3-Assign1.cabal:
   hash: 46f0c16067110161b33cddfe2d1839394b8d6d2a77921ae6b9a30278d097cb40
 /Users/ameyagupta/Desktop/repos/compsci-1jc3/1JC3-Assign1/ChangeLog.md:
@@ -7,4 +13,4 @@
 /Users/ameyagupta/Desktop/repos/compsci-1jc3/1JC3-Assign1/package.yaml:
   hash: 32c27b8c50013b025161a76ab3ece866b14d209b088ba35dad0406df9cf4a26d
 /Users/ameyagupta/Desktop/repos/compsci-1jc3/1JC3-Assign1/src/Assign_1.hs:
-  hash: a5a871406a02b7b21ef5cddf7314b622ea7bd5ee8330c5510e86c79a90e431a5
+  hash: 2c9287da5bae16d86682626efa9af8c70562e1d2e608bd4eb93db18004db0f1c
