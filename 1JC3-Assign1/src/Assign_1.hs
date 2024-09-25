@@ -40,6 +40,16 @@ cbrt :: Double -> Double
 cbrt x = x *** (1 / 3)
 
 {- -----------------------------------------------------------------
+ - discrim
+ - -----------------------------------------------------------------
+ - Description:
+ -   discrim takes in the coefficients of the cubic and returns the discriminant
+ -   an way to see the value of the discriminant without having to type in parameters over and over
+ -}
+discrim :: Double -> Double -> Double -> Double -> Double
+discrim a b c d = (cubicQ a b c) ** 3 + (cubicR a b c d) ** 2
+
+{- -----------------------------------------------------------------
  - cubicQ
  - -----------------------------------------------------------------
  - Description:
@@ -97,13 +107,13 @@ cubicT q r = cbrt (r - sqrt discrim)
  - cubicRealSolutions
  - -----------------------------------------------------------------
  - Description:
- -   takes the coefficients of the cubic as input - a, b, c, and d - and returns a list of the cubic function's roots if and only if the discriminant is greater than or equal to 0
+ -   takes the coefficients of the cubic as input - a, b, c, and d - and returns a list of the cubic function's real roots if and only if the discriminant is greater than or equal to 0
  -}
 cubicRealSolutions :: Double -> Double -> Double -> Double -> [Double]
 cubicRealSolutions a b c d
   | a == 0 = []
   | sign == -1 = []
-  | sign == 0 = if x1 === x2 then [x1, x1, x1] else [x1, x2, x2]
+  | sign == 0 = [x1, x2, x2]
   | sign == 1 = [x1]
   | otherwise = []
   where
