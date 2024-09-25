@@ -1,3 +1,7 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use foldr" #-}
+
 -- |
 -- Module      : 1JC3-Assign1.Assign_1.hs
 -- Copyright   :  (c) Curtis D'Alves 2022
@@ -123,7 +127,7 @@ cubicRealSolutions a b c d
     q = cubicQ a b c
     r = cubicR a b c d
     x1 = s + t - (b / (3 * a))
-    x2 = -((s + t) / 2) - (b / (3 * a)) -- + (sqrt (-3) * (s - t) / 2) -- not necessary
+    x2 = -((s + t) / 2) - (b / (3 * a))
 
 (===) :: Double -> Double -> Bool
 x === y =
@@ -136,3 +140,65 @@ x === y =
  -}
 
 -- TODO Add Test Cases for each of your functions below here
+
+{- -----------------------------------------------------------------
+ - cubicQ
+ - -----------------------------------------------------------------}
+testCubicQ1 = cubicQ 1 2 3 === 0.55556
+
+testCubicQ2 = cubicQ (-1) 2 (-3) === 0.55556
+
+testCubicQ3 = cubicQ 1.5 2.3 3.4 === 0.49432
+
+{- -----------------------------------------------------------------
+ - cubicR
+ - -----------------------------------------------------------------}
+testCubicR1 = cubicR 1 2 3 4 === (-1.29630)
+
+testCubicR2 = cubicR (-1) 2 (-3) 4 === 1.29630
+
+testCubicR3 = cubicR 1.5 2.3 3.4 4.2 === (-0.95426)
+
+{- -----------------------------------------------------------------
+ - cubicDiscSign
+ - -----------------------------------------------------------------}
+testCubicDiscSign1 = cubicDiscSign 1 2 == 1
+
+testCubicDiscSign2 = cubicDiscSign (-1) 0 == (-1)
+
+testCubicDiscSign3 = cubicDiscSign 0 0 == 0
+
+{- -----------------------------------------------------------------
+ - cubicS
+ - -----------------------------------------------------------------}
+testCubicS1 = cubicS 1 2 === 1.61803
+
+testCubicS2 = cubicS 4 0 === 2.0
+
+testCubicS3 = cubicS 0 0 === 0.0
+
+{- -----------------------------------------------------------------
+ - cubicT
+ - -----------------------------------------------------------------}
+testCubicT1 = cubicT 1 2 === (-0.61803)
+
+testCubicT2 = cubicT 0 0 === 0.0
+
+{- -----------------------------------------------------------------
+ - cubicRealSolutions
+ - -----------------------------------------------------------------}
+testCubicRealSolutions1 = cubicRealSolutions 1 0 0 0 == [0.0, 0.0, 0.0] -- discriminant = 0, x2 = x3, and x1 = x2 = x3
+
+testCubicRealSolutions2 = null (cubicRealSolutions 1 0 (-1) 0) -- negative discriminant, no output
+
+testCubicRealSolutions3 = cubicRealSolutions 1 (-6) 11 6 == [-0.43484136821690855] -- Three distinct real roots
+
+testList :: [Bool]
+testList = [testCubicQ1, testCubicQ2, testCubicQ3, testCubicR1, testCubicR2, testCubicR3, testCubicDiscSign1, testCubicDiscSign2, testCubicDiscSign3, testCubicS1, testCubicS2, testCubicS3, testCubicT1, testCubicT2, testCubicRealSolutions1, testCubicRealSolutions2, testCubicRealSolutions3]
+
+runTests :: [Bool] -> IO ()
+runTests (x : xs) = (if x then putStrLn "Test Passed" else putStrLn "Test failed") >> runTests xs
+runTests [] = putStrLn "End of tests"
+
+main :: IO ()
+main = runTests testList
