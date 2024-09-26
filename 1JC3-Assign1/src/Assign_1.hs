@@ -32,14 +32,16 @@ module Assign_1 where
 macid :: String
 macid = "gupta67"
 
--- for reference, a power operator for negative numbers, since powers on these numbers can often result in nonsensical results
+-- a power operator for negative numbers with floating point exponents,
+-- since these sorts of calculations can often result in NaN
+-- despite having real solutions
 (***) :: Double -> Double -> Double
 x *** y =
   if x >= 0
     then x ** y
     else -((-x) ** y)
 
--- calculates the cube root of some Double, x
+-- calculates the cube root
 cbrt :: Double -> Double
 cbrt x = x *** (1 / 3)
 
@@ -48,7 +50,9 @@ cbrt x = x *** (1 / 3)
  - -----------------------------------------------------------------
  - Description:
  -   discrim takes in the coefficients of the cubic and returns the discriminant
- -   an way to see the value of the discriminant without having to type in parameters over and over
+
+ -   a way to see the value of the discriminant without having to type in
+ -   parameters over and over
  -}
 discrim :: Double -> Double -> Double -> Double -> Double
 discrim a b c d = (cubicQ a b c) ** 3 + (cubicR a b c d) ** 2
@@ -57,7 +61,9 @@ discrim a b c d = (cubicQ a b c) ** 3 + (cubicR a b c d) ** 2
  - cubicQ
  - -----------------------------------------------------------------
  - Description:
- -   cubicQ takes in 3 Double parameters - a, b, and c (coefficients in a cubic function) - and returns a Double value that is used to calculate the discriminant of the equation
+ -   cubicQ takes in 3 Double parameters - a, b, and c
+ -   (coefficients in a cubic function) and returns a Double value that is used
+ -   to calculate the discriminant of the equation
  -}
 cubicQ :: Double -> Double -> Double -> Double
 cubicQ a b c = ((3 * a * c) - (b ** 2)) / (9 * (a ** 2))
@@ -66,7 +72,9 @@ cubicQ a b c = ((3 * a * c) - (b ** 2)) / (9 * (a ** 2))
  - cubicR
  - -----------------------------------------------------------------
  - Description:
- -   cubicR takes in 4 Double parameters - a, b, c, and d (coefficients in a cubic function) - and returns a Double value that is used in conjunction with the value from cubicQ to calculate the discriminant
+ -   cubicR takes in 4 Double parameters - a, b, c, and d
+ -   (coefficients in a cubic function) and returns a Double value that is also
+ -   used to calculate the discriminant of the equation
  -}
 cubicR :: Double -> Double -> Double -> Double -> Double
 cubicR a b c d = ((9 * a * b * c) - (27 * (a ** 2) * d) - (2 * (b ** 3))) / (54 * (a ** 3))
@@ -75,7 +83,8 @@ cubicR a b c d = ((9 * a * b * c) - (27 * (a ** 2) * d) - (2 * (b ** 3))) / (54 
  - cubicDiscSign
  - -----------------------------------------------------------------
  - Description:
- -   calculates the discriminant via the results of cubicQ and cubicR, and returns its sign as an integer in { -1, 0, 1 }
+ -   calculates the discriminant via the results of cubicQ and cubicR, and
+ -   returns its sign as an integer in { -1, 0, 1 }
  -}
 cubicDiscSign :: Double -> Double -> Int
 cubicDiscSign q r
@@ -89,7 +98,9 @@ cubicDiscSign q r
  - cubicS
  - -----------------------------------------------------------------
  - Description:
- -   calculates the value S in Cardano's Formula to help determine the roots of the cubic function by using the helper values Q and R from cubicQ and cubicR respectively
+ -   calculates the value S in Cardano's Formula to help determine the roots of
+ -   the cubic function by using the helper values Q and R from
+ -   cubicQ and cubicR respectively
  -}
 cubicS :: Double -> Double -> Double
 cubicS q r = cbrt (r + sqrt discrim)
@@ -100,7 +111,9 @@ cubicS q r = cbrt (r + sqrt discrim)
  - cubicT
  - -----------------------------------------------------------------
  - Description:
- -   calculates the value T in Cardano's Formula to help determine the roots of the cubic function by using the helper values Q and R from cubicQ and cubicR respectively
+ -   calculates the value T in Cardano's Formula to help determine the roots of
+ -   the cubic function by using the helper values Q and R from
+ -   cubicQ and cubicR respectively
  -}
 cubicT :: Double -> Double -> Double
 cubicT q r = cbrt (r - sqrt discrim)
@@ -111,7 +124,9 @@ cubicT q r = cbrt (r - sqrt discrim)
  - cubicRealSolutions
  - -----------------------------------------------------------------
  - Description:
- -   takes the coefficients of the cubic as input - a, b, c, and d - and returns a list of the cubic function's real roots if and only if the discriminant is greater than or equal to 0
+ -   takes the coefficients of the cubic as input - a, b, c, and d - and
+ -   returns a list of the cubic function's real roots if and only if
+ -   the discriminant >= 0
  -}
 cubicRealSolutions :: Double -> Double -> Double -> Double -> [Double]
 cubicRealSolutions a b c d
@@ -129,6 +144,7 @@ cubicRealSolutions a b c d
     x1 = s + t - (b / (3 * a))
     x2 = -((s + t) / 2) - (b / (3 * a))
 
+-- equals sign with tolerance to account for floating point error
 (===) :: Double -> Double -> Bool
 x === y =
   let tol = 1e-3
@@ -187,11 +203,11 @@ testCubicT2 = cubicT 0 0 === 0.0
 {- -----------------------------------------------------------------
  - cubicRealSolutions
  - -----------------------------------------------------------------}
-testCubicRealSolutions1 = cubicRealSolutions 1 0 0 0 == [0.0, 0.0, 0.0] -- discriminant = 0, x2 = x3, and x1 = x2 = x3
+testCubicRealSolutions1 = cubicRealSolutions 1 0 0 0 == [0.0, 0.0, 0.0]
 
-testCubicRealSolutions2 = null (cubicRealSolutions 1 0 (-1) 0) -- negative discriminant, no output
+testCubicRealSolutions2 = null (cubicRealSolutions 1 0 (-1) 0)
 
-testCubicRealSolutions3 = cubicRealSolutions 1 (-6) 11 6 == [-0.43484136821690855] -- Three distinct real roots
+testCubicRealSolutions3 = cubicRealSolutions 1 (-6) 11 6 == [-0.43484136821690855]
 
 testList :: [Bool]
 testList = [testCubicQ1, testCubicQ2, testCubicQ3, testCubicR1, testCubicR2, testCubicR3, testCubicDiscSign1, testCubicDiscSign2, testCubicDiscSign3, testCubicS1, testCubicS2, testCubicS3, testCubicT1, testCubicT2, testCubicRealSolutions1, testCubicRealSolutions2, testCubicRealSolutions3]
