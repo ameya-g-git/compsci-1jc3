@@ -32,16 +32,24 @@ module Assign_1 where
 macid :: String
 macid = "gupta67"
 
--- a power operator for negative numbers with floating point exponents,
--- since these sorts of calculations can often result in NaN
--- despite having real solutions
+{- -----------------------------------------------------------------
+ - cbrt
+ - -----------------------------------------------------------------
+ - a power operator for negative numbers with floating point exponents,
+ - since these sorts of calculations can often result in NaN
+ - despite having real solutions
+ -}
 (***) :: Double -> Double -> Double
 x *** y =
   if x >= 0
     then x ** y
     else -((-x) ** y)
 
--- calculates the cube root
+{- -----------------------------------------------------------------
+ - cbrt
+ - -----------------------------------------------------------------
+ - calculates the cube root using the helper infix function ***
+ -}
 cbrt :: Double -> Double
 cbrt x = x *** (1 / 3)
 
@@ -88,8 +96,8 @@ cubicR a b c d = ((9 * a * b * c) - (27 * (a ** 2) * d) - (2 * (b ** 3))) / (54 
  -}
 cubicDiscSign :: Double -> Double -> Int
 cubicDiscSign q r
-  | discrim < 0 = -1
   | abs discrim === 0 = 0
+  | discrim < 0 = -1
   | otherwise = 1
   where
     discrim = (q ** 3) + (r ** 2)
