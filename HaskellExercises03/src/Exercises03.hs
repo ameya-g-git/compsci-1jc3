@@ -77,31 +77,23 @@ isSearchTree :: (Ord a) => Tree a -> Bool
 isSearchTree tree = case tree of
   Node root left right -> root > minBound && root < maxBound && isSearchTree left && isSearchTree right
     where
+      --                        check root is within bounds && verify that left and right subtrees are also valid
+
       minBound = bstMax left -- root should be greater than the largest value in its left subtree
       maxBound = bstMin right -- root should be less than the smallest value in its right subtree
   Leaf _ -> True
 
+-- get the largest value assuming the tree is a search tree
 bstMax :: (Ord a) => Tree a -> a
 bstMax tree = case tree of
   Node _ _ right -> bstMax right
   Leaf val -> val -- max value
 
+-- get the smallest value assuming the tree is a search tree
 bstMin :: (Ord a) => Tree a -> a
 bstMin tree = case tree of
   Node _ left _ -> bstMin left
   Leaf val -> val -- min value
-
--- -- determines if some value is greater than its left subtree
--- greaterThanTree :: (Ord a) => a -> Tree a -> Bool
--- greaterThanTree val tree = case tree of
---   Node head left right -> val >= head && greaterThanTree head left && greaterThanTree val left
---   Leaf leaf -> val >= leaf
-
--- -- determines if some value is less than its right subtree
--- lessThanTree :: (Ord a) => a -> Tree a -> Bool
--- lessThanTree val tree = case tree of
---   Node head left right -> val < head && lessThanTree head right && lessThanTree val right
---   Leaf leaf -> val < leaf
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------
