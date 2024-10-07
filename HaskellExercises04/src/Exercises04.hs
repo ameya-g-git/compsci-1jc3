@@ -1,17 +1,16 @@
-{-|
-Module      : HaskellExercises04.Exercises04
-Copyright   :  (c) Curtis D'Alves 2020
-License     :  GPL (see the LICENSE file)
-Maintainer  :  none
-Stability   :  experimental
-Portability :  portable
-
-Description:
-  Haskell exercise template Set 04 - McMaster CS 1JC3 2021
--}
+-- |
+-- Module      : HaskellExercises04.Exercises04
+-- Copyright   :  (c) Curtis D'Alves 2020
+-- License     :  GPL (see the LICENSE file)
+-- Maintainer  :  none
+-- Stability   :  experimental
+-- Portability :  portable
+--
+-- Description:
+--   Haskell exercise template Set 04 - McMaster CS 1JC3 2021
 module Exercises04 where
 
-import Prelude hiding (zip,take,drop)
+import Prelude hiding (drop, take, zip)
 
 -----------------------------------------------------------------------------------------------------------
 -- INSTRUCTIONS              README!!!
@@ -23,7 +22,7 @@ import Prelude hiding (zip,take,drop)
 --    SUBMITTING, FAILURE TO DO SO WILL RESULT IN A MARK OF 0
 -- 4) REPLACE macid = "TODO" WITH YOUR ACTUAL MACID (EX. IF YOUR MACID IS jim THEN macid = "jim")
 -----------------------------------------------------------------------------------------------------------
-macid = "TODO"
+macid = "gupta67"
 
 -- Exercise A
 -----------------------------------------------------------------------------------------------------------
@@ -32,8 +31,8 @@ macid = "TODO"
 --  zip [1,2,3] ['a','b'] == [(1,'a'),(2,'b')]
 -- NOTE zip short circuits on the shortest list
 -----------------------------------------------------------------------------------------------------------
-zip :: [a] -> [b] -> [(a,b)]
-zip xs ys = error "TODO implement zip"
+zip :: [a] -> [b] -> [(a, b)]
+zip xs ys = if null xs || null ys then [] else (head xs, head ys) : zip (tail xs) (tail ys)
 
 -- Exercise B
 -----------------------------------------------------------------------------------------------------------
@@ -43,20 +42,28 @@ zip xs ys = error "TODO implement zip"
 --  mapWithIndex (\(idx,x) -> idx + x) [0,0,0] == [0,1,2]
 -- NOTE zip [0..] xs   creates a list of (index,element) tuples
 -----------------------------------------------------------------------------------------------------------
-mapWithIndex :: ((Int,a) -> b) -> [a] -> [b]
-mapWithIndex f xs = error "TODO implement mapWithIndex"
+mapWithIndex :: ((Int, a) -> b) -> [a] -> [b]
+mapWithIndex f xs =
+  let indexElemList = zip [0 ..] xs
+      mapWithIndexAux :: ((Int, a) -> b) -> [(Int, a)] -> [b]
+      mapWithIndexAux _ [] = []
+      mapWithIndexAux f idxList = f (head idxList) : mapWithIndexAux f (tail idxList)
+   in mapWithIndexAux f indexElemList
 
 -- Exercise C
 -----------------------------------------------------------------------------------------------------------
 -- Implement the function mySum that works just like the Prelude function sum that adds up all the elements
 -- in a list, but works on the following custom List data type instead
 -----------------------------------------------------------------------------------------------------------
-data List a = Cons a (List a)
-            | Nil
-  deriving (Show,Eq)
+data List a
+  = Cons a (List a)
+  | Nil
+  deriving (Show, Eq)
 
 mySum :: (Num a) => List a -> a
-mySum xs       = error "TODO implement mySum"
+mySum xs = case xs of
+  Cons x list -> x + mySum list
+  Nil -> 0
 
 -- Exercise D
 -----------------------------------------------------------------------------------------------------------
@@ -64,7 +71,9 @@ mySum xs       = error "TODO implement mySum"
 -- (i.e. concatenates them), but works on the above custom List data type instead
 -----------------------------------------------------------------------------------------------------------
 (+++) :: List a -> List a -> List a
-xs +++ ys = error "TODO implement +++"
+xs +++ ys = case xs of
+  Cons x list -> Cons x (list +++ ys)
+  Nil -> ys
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------
@@ -72,20 +81,24 @@ xs +++ ys = error "TODO implement +++"
 -- order of all elements in a list, but works on the above custom List data type instead
 -----------------------------------------------------------------------------------------------------------
 myReverse :: List a -> List a
-myReverse xs  = error "TODO implement myReverse"
+myReverse xs = case xs of
+  Cons x list -> myReverse list +++ Cons x Nil -- because +++ replaces the former Nil with the list in front of the operator
+  Nil -> Nil
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------
 -- Implement the function treeSum that works just like the Prelude function sum that adds up all the
 -- elements in a list, but works on the following custom Tree data type instead
 -----------------------------------------------------------------------------------------------------------
-data Tree a = Node a (Tree a) (Tree a)
-            | Empty
-  deriving (Show,Eq)
+data Tree a
+  = Node a (Tree a) (Tree a)
+  | Empty
+  deriving (Show, Eq)
 
-treeSum :: Num a => Tree a -> a
-treeSum tree = error "TODO implement treeSum"
-
+treeSum :: (Num a) => Tree a -> a
+treeSum tree = case tree of
+  Node val left right -> val + treeSum left + treeSum right
+  Empty -> 0
 
 -- Exercise G
 -----------------------------------------------------------------------------------------------------------
@@ -100,17 +113,37 @@ treeSum tree = error "TODO implement treeSum"
 -- NOTE the Empty Tree is of height 0
 -----------------------------------------------------------------------------------------------------------
 treeHeight :: Tree a -> Int
-treeHeight tree = error "TODO implement treeHeight"
+treeHeight tree = case tree of
+  Node _ left right -> 1 + max (treeHeight left) (treeHeight right)
+  Empty -> 0
 
 -- Exercise H
 -----------------------------------------------------------------------------------------------------------
 -- Implement the Prelude functions take and drop that take / drop the first n elements of a list
 -----------------------------------------------------------------------------------------------------------
 take :: Int -> [a] -> [a]
-take n xs = error "TODO implement take"
+take _ [] = []
+take 0 _ = []
+take n xs =
+  let indexElemXs = zip [0 ..] xs
+      takeHelper :: Int -> [(Int, a)] -> [a]
+      takeHelper _ [] = []
+      takeHelper n (ix : ixs) = if fst ix < n then snd ix : takeHelper n ixs else []
+   in if n >= 0 then takeHelper n indexElemXs else []
 
+-- assign each term in xs its index via the zip strategy from before
+-- compare the head's index to (n-1) and only add it to the returned list if its less than that
+
+-- yeah i could just reverse the list and keep the same code but thats also lame
 drop :: Int -> [a] -> [a]
-drop n xs = error "TODO implement drop"
+drop _ [] = []
+drop 0 xs = xs
+drop n xs =
+  let indexElemXs = zip [0 ..] xs
+      dropHelper :: Int -> [(Int, a)] -> [a]
+      dropHelper _ [] = []
+      dropHelper n ixs = if fst (head ixs) == n then [x | (i, x) <- ixs] else dropHelper n (tail ixs)
+   in if n >= 0 then dropHelper n indexElemXs else []
 
 -- Extra Challenge
 -----------------------------------------------------------------------------------------------------------
