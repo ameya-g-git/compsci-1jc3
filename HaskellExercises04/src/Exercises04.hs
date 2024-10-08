@@ -124,29 +124,22 @@ treeHeight tree = case tree of
 take :: Int -> [a] -> [a]
 take _ [] = []
 take 0 _ = []
-take n xs =
-  let indexElemXs = zip [0 ..] xs
-      takeHelper :: Int -> [(Int, a)] -> [a]
-      takeHelper _ [] = []
-      takeHelper n (ix : ixs) = if fst ix < n then snd ix : takeHelper n ixs else []
-   in if n >= 0 then takeHelper n indexElemXs else []
+take n xs = if n > 0 then head xs : take (n - 1) (tail xs) else []
 
--- assign each term in xs its index via the zip strategy from before
--- compare the head's index to (n-1) and only add it to the returned list if its less than that
-
--- yeah i could just reverse the list and keep the same code but thats also lame
 drop :: Int -> [a] -> [a]
 drop _ [] = []
 drop 0 xs = xs
-drop n xs =
-  let indexElemXs = zip [0 ..] xs
-      dropHelper :: Int -> [(Int, a)] -> [a]
-      dropHelper _ [] = []
-      dropHelper n ixs = if fst (head ixs) == n then [x | (i, x) <- ixs] else dropHelper n (tail ixs)
-   in if n >= 0 then dropHelper n indexElemXs else []
+drop n xs = if n < 0 then head xs : drop (n - 1) (tail xs) else drop (n - 1) (tail xs)
 
 -- Extra Challenge
 -----------------------------------------------------------------------------------------------------------
 -- Try and create a QuickCheck property that tests take and drop in combination
 -- See the function takeDropProp in app/Main.hs for a solution
 -----------------------------------------------------------------------------------------------------------
+
+takeDropProp :: Int -> [Int] -> Bool
+takeDropProp n xs = take n xs ++ drop n xs == xs
+
+-- main = quickCheck takeDropProp
+
+-- i dont have the QuickCheck library installed so this throws an error
