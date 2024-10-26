@@ -53,7 +53,7 @@ gaussImag (_, b) = b
  -   returns the conjugate of a given GaussianInt by multiplying the imaginary component by -1
  -}
 gaussConj :: GaussianInt -> GaussianInt
-gaussConj (r, i) = (r, -i)
+gaussConj (a, b) = (a, -b)
 
 {- -----------------------------------------------------------------
  - gaussAdd
@@ -62,7 +62,7 @@ gaussConj (r, i) = (r, -i)
  -   adds the real and imaginary components of two GaussianInt's separately to form a GaussianInt addition
  -}
 gaussAdd :: GaussianInt -> GaussianInt -> GaussianInt
-gaussAdd (a, b) (c, d) = (a + c, b + d)
+gaussAdd (a0, b0) (a1, b1) = (a0 + a1, b0 + b1)
 
 {- -----------------------------------------------------------------
  - gaussMul
@@ -71,10 +71,10 @@ gaussAdd (a, b) (c, d) = (a + c, b + d)
  -   multiplies two GaussianInt's together
  -}
 gaussMul :: GaussianInt -> GaussianInt -> GaussianInt
-gaussMul x y = (real, imag)
+gaussMul (a0, b0) (a1, b1) = (real, imag)
   where
-    real = (fst x * fst y) - (snd x * snd y)
-    imag = (fst x * snd y) + (fst y * snd x)
+    real = (a0 * a1) - (b0 * b1)
+    imag = (a0 * b1) + (a1 * b0)
 
 {- -----------------------------------------------------------------
  - gaussNorm
@@ -83,7 +83,7 @@ gaussMul x y = (real, imag)
  -   returns the norm of a GaussianInt
  -}
 gaussNorm :: GaussianInt -> Integer
-gaussNorm x = fst x ^ 2 + snd x ^ 2
+gaussNorm (a, b) = a ^ 2 + b ^ 2
 
 {- -----------------------------------------------------------------
  - gaussAddList
@@ -93,7 +93,7 @@ gaussNorm x = fst x ^ 2 + snd x ^ 2
  -}
 gaussAddList :: [GaussianInt] -> GaussianInt
 gaussAddList [] = (0, 0)
-gaussAddList x = head x `gaussAdd` gaussAddList (tail x)
+gaussAddList (x : xs) = x `gaussAdd` gaussAddList xs
 
 {- -----------------------------------------------------------------
  - gaussMulList
@@ -103,7 +103,7 @@ gaussAddList x = head x `gaussAdd` gaussAddList (tail x)
  -}
 gaussMulList :: [GaussianInt] -> GaussianInt
 gaussMulList [] = (1, 0)
-gaussMulList x = head x `gaussMul` gaussMulList (tail x)
+gaussMulList (x : xs) = x `gaussMul` gaussMulList xs
 
 {- ------------------------------------------------------------------------
  - gaussCircle
@@ -243,19 +243,19 @@ Actual Output: (6, 8)
 
 Function: gaussCircle
 Test Case Number: 1
-Input: [(3, 4), (1, 1), (0, 2)], 30
+Input: [(3, 4), (1, 1), (0, 2)] 30
 Expected Output: [(3, 4), (1, 1), (0, 2)]
 Actual Output: [(3, 4), (1, 1), (0, 2)]
 
 Function: gaussCircle
 Test Case Number: 2
-Input: [(5, 6), (-1, -1), (2, 3)], 50
+Input: [(5, 6), (-1, -1), (2, 3)] 50
 Expected Output: [(-1, -1), (2, 3)]
 Actual Output: [(-1, -1), (2, 3)]
 
 Function: gaussCircle
 Test Case Number: 3
-Input: [(3, 4), (0, 1), (7, 8)], 20
+Input: [(3, 4), (0, 1), (7, 8)] 20
 Expected Output: [(0, 1)]
 Actual Output: [(0, 1)]
 
