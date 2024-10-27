@@ -1,17 +1,16 @@
-{-|
-Module      : HaskellExercises05.Exercises05
-Copyright   :  (c) Curtis D'Alves 2020
-License     :  GPL (see the LICENSE file)
-Maintainer  :  none
-Stability   :  experimental
-Portability :  portable
-
-Description:
-  Haskell exercise template Set 05 - McMaster CS 1JC3 2021
--}
+-- |
+-- Module      : HaskellExercises05.Exercises05
+-- Copyright   :  (c) Curtis D'Alves 2020
+-- License     :  GPL (see the LICENSE file)
+-- Maintainer  :  none
+-- Stability   :  experimental
+-- Portability :  portable
+--
+-- Description:
+--   Haskell exercise template Set 05 - McMaster CS 1JC3 2021
 module Exercises05 where
 
-import Prelude hiding (take,drop,replicate,(!!),elem,and,or)
+import Prelude hiding (and, drop, elem, or, replicate, take, (!!))
 
 -----------------------------------------------------------------------------------------------------------
 -- INSTRUCTIONS              README!!!
@@ -23,7 +22,7 @@ import Prelude hiding (take,drop,replicate,(!!),elem,and,or)
 --    SUBMITTING, FAILURE TO DO SO WILL RESULT IN A MARK OF 0
 -- 4) REPLACE macid = "TODO" WITH YOUR ACTUAL MACID (EX. IF YOUR MACID IS jim THEN macid = "jim")
 -----------------------------------------------------------------------------------------------------------
-macid = "TODO"
+macid = "gupta67"
 
 -- Exercise A
 -----------------------------------------------------------------------------------------------------------
@@ -34,14 +33,13 @@ macid = "TODO"
 --        efficient implementation of this function can be done calling an auxilary function with
 --        different parameters that recurses through the list directly
 -----------------------------------------------------------------------------------------------------------
-split :: [a] -> ([a],[a])
+split :: [a] -> ([a], [a])
 split xs =
-  let
-    half = length xs `div` 2
-    split' xs (y:ys) n = error "TODO implement split'"
-    split' xs [] n = (xs,[])
+  let half = length xs `div` 2
+      split' :: [a] -> [a] -> Int -> ([a], [a])
+      split' xs (y : ys) n = if n > 0 then split' (xs ++ [y]) ys (n - 1) else (xs, y : ys)
+      split' xs [] n = (xs, [])
    in split' [] xs half
-
 
 -- Exercise B
 -----------------------------------------------------------------------------------------------------------
@@ -49,7 +47,11 @@ split xs =
 -- them together in to a sorted list
 -----------------------------------------------------------------------------------------------------------
 merge :: (Ord a) => [a] -> [a] -> [a]
-merge xs ys = error "TODO implement merge"
+merge (x : xs) (y : ys)
+  | x >= y = y : merge (x : xs) ys
+  | otherwise = x : merge xs (y : ys)
+merge [] ys = ys
+merge xs [] = xs
 
 -- Exercise C
 -----------------------------------------------------------------------------------------------------------
@@ -58,7 +60,12 @@ merge xs ys = error "TODO implement merge"
 -- NOTE singleton and empty lists are already sorted
 -----------------------------------------------------------------------------------------------------------
 mergeSort :: (Ord a) => [a] -> [a]
-mergeSort xs = error "TODO implement mergeSort"
+mergeSort xs = mergeSortAux (split xs)
+  where
+    mergeSortAux :: (Ord a) => ([a], [a]) -> [a]
+    mergeSortAux (l, r)
+      | length l > 1 || length r > 1 = merge (mergeSortAux (split l)) (mergeSortAux (split r))
+      | otherwise = merge l r
 
 -- Exercise D
 -----------------------------------------------------------------------------------------------------------
@@ -67,7 +74,12 @@ mergeSort xs = error "TODO implement mergeSort"
 --      quickCheck (sortProp . mergeSort)
 -----------------------------------------------------------------------------------------------------------
 sortProp :: (Ord a) => [a] -> Bool
-sortProp xs = error "TODO implement sortProp"
+sortProp [] = True
+sortProp (x : xs) = sortPropAux x xs
+  where
+    sortPropAux :: (Ord a) => a -> [a] -> Bool
+    sortPropAux x (y : ys) = (x < y) && sortPropAux y ys
+    sortPropAux _ [] = True
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------
@@ -75,7 +87,7 @@ sortProp xs = error "TODO implement sortProp"
 -- replicates that element n times
 -----------------------------------------------------------------------------------------------------------
 replicate :: Int -> a -> [a]
-replicate n x = error "TODO implement replicate"
+replicate n x = if n > 0 then x : replicate (n - 1) x else []
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------
@@ -83,7 +95,9 @@ replicate n x = error "TODO implement replicate"
 -- NOTE throw an error when indexing out of bounds
 -----------------------------------------------------------------------------------------------------------
 (!!) :: [a] -> Int -> a
-(!!) xs n = error "TODO implement !!"
+(!!) (x : xs) n
+  | length (x : xs) < n || n < 0 = error "Index out of bounds."
+  | otherwise = if n > 0 then (!!) xs (n - 1) else x
 
 -- Exercise G
 -----------------------------------------------------------------------------------------------------------
@@ -91,4 +105,5 @@ replicate n x = error "TODO implement replicate"
 -- is an element of the list
 -----------------------------------------------------------------------------------------------------------
 elem :: (Eq a) => a -> [a] -> Bool
-elem e xs = error "TODO implement elem"
+elem e (x : xs) = e == x || elem e xs
+elem _ [] = False
