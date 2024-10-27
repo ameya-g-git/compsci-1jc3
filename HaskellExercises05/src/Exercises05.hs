@@ -78,7 +78,7 @@ sortProp [] = True
 sortProp (x : xs) = sortPropAux x xs
   where
     sortPropAux :: (Ord a) => a -> [a] -> Bool
-    sortPropAux x (y : ys) = (x < y) && sortPropAux y ys
+    sortPropAux x (y : ys) = (x <= y) && sortPropAux y ys
     sortPropAux _ [] = True
 
 -- Exercise E
