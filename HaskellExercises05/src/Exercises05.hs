@@ -50,8 +50,7 @@ merge :: (Ord a) => [a] -> [a] -> [a]
 merge (x : xs) (y : ys)
   | x >= y = y : merge (x : xs) ys
   | otherwise = x : merge xs (y : ys)
-merge [] ys = ys
-merge xs [] = xs
+merge xs ys = xs ++ ys -- one list has no items
 
 -- Exercise C
 -----------------------------------------------------------------------------------------------------------
@@ -67,6 +66,13 @@ mergeSort xs = mergeSortAux (split xs)
       | length l > 1 || length r > 1 = merge (mergeSortAux (split l)) (mergeSortAux (split r))
       | otherwise = merge l r
 
+-- mergeSort xs
+--   | length xs > 2 = merge (mergeSort l) (mergeSort r) -- recursively split if list is greater than 2 items
+--   | length xs == 2 = merge [head xs] (tail xs) -- sort lists with 2 items
+--   | otherwise = xs -- singleton / empty list is sorted
+--   where
+--     (l, r) = split xs
+
 -- Exercise D
 -----------------------------------------------------------------------------------------------------------
 -- Implement the function sortProp that tests if a list is sorted or not
@@ -74,12 +80,15 @@ mergeSort xs = mergeSortAux (split xs)
 --      quickCheck (sortProp . mergeSort)
 -----------------------------------------------------------------------------------------------------------
 sortProp :: (Ord a) => [a] -> Bool
-sortProp [] = True
-sortProp (x : xs) = sortPropAux x xs
-  where
-    sortPropAux :: (Ord a) => a -> [a] -> Bool
-    sortPropAux x (y : ys) = (x <= y) && sortPropAux y ys
-    sortPropAux _ [] = True
+-- sortProp [] = True
+-- sortProp (x : xs) = sortPropAux x xs
+--   where
+--     sortPropAux :: (Ord a) => a -> [a] -> Bool
+--     sortPropAux x (y : ys) = (x <= y) && sortPropAux y ys
+--     sortPropAux _ [] = True
+
+sortProp (x : y : ys) = x <= y && sortProp (y : ys)
+sortProp xs = True
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------

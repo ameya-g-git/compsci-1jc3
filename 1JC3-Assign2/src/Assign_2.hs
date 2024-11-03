@@ -113,7 +113,9 @@ gaussMulList (x : xs) = x `gaussMul` gaussMulList xs
  -   such that all GaussianInt's in the list have a norm less than some integer, n
  -}
 gaussCircle :: [GaussianInt] -> Integer -> [GaussianInt]
-gaussCircle vs n = [gInt | gInt <- vs, gaussNorm gInt < n]
+gaussCircle vs n
+  | n > 0 = [gInt | gInt <- vs, gaussNorm gInt < n]
+  | otherwise = error "Norm bound must be nonnegative and not 0"
 
 {-
 
@@ -249,9 +251,9 @@ Actual Output: [(3, 4), (1, 1), (0, 2)]
 
 Function: gaussCircle
 Test Case Number: 2
-Input: [(5, 6), (-1, -1), (2, 3)] 50
-Expected Output: [(-1, -1), (2, 3)]
-Actual Output: [(-1, -1), (2, 3)]
+Input: [(5, 6), (-1, -1), (2, 3)] -50
+Expected Output: *** Exception: Norm bound must be nonnegative and not 0
+Actual Output: *** Exception: Norm bound must be nonnegative and not 0
 
 Function: gaussCircle
 Test Case Number: 3
