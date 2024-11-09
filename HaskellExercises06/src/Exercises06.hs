@@ -1,8 +1,3 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
-{-# HLINT ignore "Eta reduce" #-}
-{-# HLINT ignore "Use concat" #-}
-
 -- |
 -- Module      : HaskellExercises06.Exercises06
 -- Copyright   :  (c) Curtis D'Alves 2020
