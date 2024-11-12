@@ -1,4 +1,4 @@
--- |
+--
 -- Module      : 1JC3-Assign2.Assign_2.hs
 -- Copyright   :  (c) William M. Farmer 2024
 -- License     :  GPL (see the LICENSE file)
