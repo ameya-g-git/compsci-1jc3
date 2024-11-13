@@ -143,16 +143,13 @@ polyListSum pl ql = pl `concatPolyList` ql
  -}
 
 polyListProd :: (Num a) => PolyList a -> PolyList a -> PolyList a
-polyListProd pl ql = polyListProdAux pl ql 0
+polyListProd (PolyList []) _ = PolyList [0]
+polyListProd (PolyList pl) (PolyList ql) = polyListTermProd `polyListSum` polyListProd (PolyList pl') (PolyList ql)
   where
-    -- polyListTermProd multiplies the PolyList inputted by the coefficient, and pads the start of the list with 0s depending on the degree of the term
-    polyListTermProd :: (Num a, Num b, Enum b) => a -> b -> PolyList a -> PolyList a
-    polyListTermProd coef deg (PolyList pl) = PolyList ([0 | _ <- [1 .. deg]] ++ map (coef *) pl)
-
-    -- auxiliary function logic
-    polyListProdAux :: (Num a, Num b, Enum b) => PolyList a -> PolyList a -> b -> PolyList a
-    polyListProdAux (PolyList (p : pl)) ql n = polyListTermProd p n ql `polyListSum` polyListProdAux (PolyList pl) ql (n + 1)
-    polyListProdAux (PolyList p) (PolyList q) _ = PolyList ([0 | _ <- [1 .. (length q)]])
+    coef = last pl
+    pl' = init pl
+    deg = length pl'
+    polyListTermProd = PolyList ([0 | _ <- [1 .. deg]] ++ map (coef *) ql)
 
 {- -----------------------------------------------------------------
  - polyListToPoly
