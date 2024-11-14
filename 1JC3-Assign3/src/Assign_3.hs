@@ -159,10 +159,9 @@ polyListProd (PolyList pl) (PolyList ql) = polyListTermProd `polyListSum` polyLi
  -    - xExp, which raises X (Poly) to some inputted power
  -}
 
-polyListToPoly :: (Num a, Eq a) => PolyList a -> Poly a
+polyListToPoly :: (Num a) => PolyList a -> Poly a
 polyListToPoly (PolyList []) = Coef 0
 polyListToPoly (PolyList pl)
-  | p == 0 = polyListToPoly (PolyList pl')
   | deg == 0 && not (null pl') = Sum (Coef p) (polyListToPoly (PolyList pl')) -- degree of 0 and more than one term means we add the coefficient to the polynomial
   | deg == 0 = Coef p -- PolyList has one term
   | null pl' = Prod (Coef p) (xExp deg) -- reached the last term in the PolyList (that has more than 1 term)
@@ -182,7 +181,7 @@ polyListToPoly (PolyList pl)
  -    Converts a Poly to a PolyList by simplifying expressions between X and Coef's
  -    using the polyListSum and polyListProd functions
  -}
-polyToPolyList :: (Num a) => Poly a -> PolyList a
+polyToPolyList :: (Num a, Eq a) => Poly a -> PolyList a
 polyToPolyList p = case p of
   Coef x -> PolyList [x]
   X -> PolyList [0, 1]
