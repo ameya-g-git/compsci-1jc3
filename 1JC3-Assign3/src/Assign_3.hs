@@ -24,7 +24,7 @@ module Assign_3 where
 -----------------------------------------------------------------------------------------------------------
 
 -- Name: Ameya Gupta
--- Date: 13/11/2024
+-- Date: 15/11/2024
 macid :: String
 macid = "gupta67"
 
@@ -68,6 +68,9 @@ polyFun p c = case p of
  -}
 
 {-
+-- ALL OF THIS CODE BELOW IS EXPERIMENTING WITH THE POLY TYPE, THE ACTUAL IMPLEMENTATION TO BE GRADED IS BELOW THIS BLOCK, UNCOMMENTED
+
+{-
 - isZeroPoly -------------------------------------------------------
 - any polynomial of degree n will have at most n real roots.
 - isZeroPoly checks if a function is a zero polynomial by evaluating a Poly using values from [1..n+1],
@@ -75,8 +78,8 @@ polyFun p c = case p of
 - if they all evaluate to 0, the function returns True
 -}
 isZeroPoly :: (Num a, Eq a) => Poly a -> Int -> Bool
-isZeroPoly _ 0 = True
-isZeroPoly (Coef 0) _ = False
+isZeroPoly (Coef 0) 0 = True
+isZeroPoly _ 0 = False
 isZeroPoly p deg = all (== 0) [polyFun p (fromIntegral x) | x <- [1 .. deg + 1]]
 
 -- calculates the hard value of the degree without knowing if the polynomial is a zero polynomial or not
@@ -91,9 +94,23 @@ getPolyDegree p = case p of
 
 -- if the polynomial is a zero polynomial, an error is returned, otherwise return the degree
 polyDegree :: (Num a, Eq a) => Poly a -> Int
-polyDegree p = if isZeroPoly p degree then error "Zero polynomial is undefined" else degree
+polyDegree p = case p of
+  Sum q r ->
+    -- for the case that one (or more) polynomial(s) in a sum is a zero Poly,
+    -- this needs to be determined as to not return an incorrect degree
+    case [isZeroPoly q (getPolyDegree q), isZeroPoly r (getPolyDegree r)] of
+      [True, False] -> polyDegree r -- first poly is zero
+      [False, True] -> polyDegree q -- second poly is zero
+      [False, False] -> max (polyDegree p) (polyDegree q) -- neither are zero
+      _ -> error "Zero polynomial is undefined" -- both are zero
+      -- otherwise, the getPolyDegree should work as expected, since multiplication by a zero polynomial is a zero polynomial
+  _ -> if isZeroPoly p degree then error "Zero polynomial is undefined" else degree
   where
     degree = getPolyDegree p
+-}
+
+polyDegree :: (Num a, Eq a) => Poly a -> Int
+polyDegree p = polyListDegree (polyToPolyList p)
 
 {- -----------------------------------------------------------------
  - polyListFun
@@ -109,7 +126,8 @@ polyListFun (PolyList []) _ = 0
  - polyListDegree
  - -----------------------------------------------------------------
  - Description:
- -    Returns the degree of a PolyList by first omitting trailing zeroes and then finding the length of the properized list
+ -    Returns the degree of a PolyList by first omitting trailing zeroes
+ -    and then finding the length of the properized list
  -}
 
 polyListDegree :: (Num a, Eq a) => PolyList a -> Int
@@ -221,59 +239,6 @@ Test cases for helper functions were also completed just to ensure that their be
 -- Actual Output: 12
 -- Rationale: This test evaluates a combination of the various sum types involved in the Poly declaration.
 
--- Test Cases for isZeroPoly
-
--- Function: isZeroPoly
--- Test Case Number: 1
--- Input: isZeroPoly (Coef 0) 1
--- Expected Output: True
--- Actual Output: True
--- Rationale: This test checks that the function correctly identifies a constant zero coefficient as a zero polynomial.
-
--- Function: isZeroPoly
--- Test Case Number: 2
--- Input: isZeroPoly (Sum (Prod X X) (Coef 0)) 2
--- Expected Output: False
--- Actual Output: False
--- Rationale: This test verifies that adding a zero coefficient term to a non-zero polynomial does not result in a zero polynomial classification.
-
--- Function: isZeroPoly
--- Test Case Number: 3
--- Input: isZeroPoly (Prod X (Coef 0)) 2
--- Expected Output: True
--- Actual Output: True
--- Rationale: This test confirms that a product involving a zero coefficient correctly results in a zero polynomial.
-
--- Function: isZeroPoly
--- Test Case Number: 4
--- Input: isZeroPoly (Sum (Prod X X) (Prod X (Coef 0))) 2
--- Expected Output: False
--- Actual Output: False
--- Rationale: This test confirms that a sum involving a zero polynomial and a nonzero polynomial results in a nonzero polynomial classification.
-
--- Test Cases for getPolyDegree
-
--- Function: getPolyDegree
--- Test Case Number: 1
--- Input: getPolyDegree (Coef 7)
--- Expected Output: 0
--- Actual Output: 0
--- Rationale: This test verifies that the function correctly identifies a constant value with a non-zero coefficient as having degree 0.
-
--- Function: getPolyDegree
--- Test Case Number: 2
--- Input: getPolyDegree X
--- Expected Output: 1
--- Actual Output: 1
--- Rationale: This test ensures that the function correctly identifies a polynomial with a single X term as having degree 1.
-
--- Function: getPolyDegree
--- Test Case Number: 3
--- Input: getPolyDegree (Prod X (Sum X (Coef 1)))
--- Expected Output: 2
--- Actual Output: 2
--- Rationale: This test evaluates a more complex polynomial, where a product involving two X terms results in a degree of 2, verifying the function's handling of multiplication and sums.
-
 -- Test Cases for polyDegree
 
 -- Function: polyDegree
@@ -303,6 +268,13 @@ Test cases for helper functions were also completed just to ensure that their be
 -- Expected Output: error "Zero polynomial is undefined"
 -- Actual Output: error "Zero polynomial is undefined"
 -- Rationale: This test ensures that a more complex representation of a zero polynomial that still evaluates to an undefined degree.
+
+-- Function: polyDegree
+-- Test Case Number: 5
+-- Input polyDegree (Sum (Sum (Prod (Coef 3) X) (Prod (Coef (-3)) X)) (Coef 3))
+-- Expected Output: 0
+-- Actual Output: 0
+-- Rationale: This test ensures that a sum between a zero polynomial and a nonzero polynomial returns the degree of the nonzero polynomial
 
 -- Test Cases for polyListFun
 
