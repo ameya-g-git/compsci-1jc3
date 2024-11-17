@@ -1,0 +1,70 @@
+Test suite 1JC3-Assign3-test: RUNNING...
+
+polyListFun
+  should be constant for single coefficients [✔]
+    +++ OK, passed 100 tests.
+polyListFun
+  should be linear for two coefficients [✔]
+    +++ OK, passed 100 tests.
+polyListFun
+  should be quadratic for three coefficients [✔]
+    +++ OK, passed 100 tests.
+polyListFun
+  should be cubic for four coefficients [✔]
+    +++ OK, passed 100 tests.
+polyListDegree
+  the nth derivative should not be zero [✔]
+    +++ OK, passed 100 tests.
+polyListDegree
+  the (n+1)th derivative should be zero [✔]
+    +++ OK, passed 100 tests.
+polyListSum
+  evaluating a polyList then adding should be the same as evaluating the sum of two polyLists [✔]
+    +++ OK, passed 100 tests.
+polyListProd
+  evaluating a polyList then multiplying should be the same as evaluating the products of two polyLists [✔]
+    +++ OK, passed 100 tests.
+polyDegree
+  the nth derivative should not be zero [✘]
+polyDegree
+  the (n+1)th derivative should be zero [✘]
+polyToPolyList
+  the function should map values for c to the same value after being converted [✔]
+    +++ OK, passed 100 tests.
+polyListToPoly
+  the function should map values for c to the same value after being converted [✔]
+    +++ OK, passed 100 tests.
+polyToPolyList,polyListToPoly
+  converting polyList to poly then back to polyList should result in the same polyList [✔]
+    +++ OK, passed 100 tests.
+
+Failures:
+
+  test/Spec.hs:164:5: 
+  1) polyDegree the nth derivative should not be zero
+       uncaught exception: ErrorCall
+       Zero polynomial is undefined
+       CallStack (from HasCallStack):
+         error, called at src/Assign_3.hs:134:32 in 1JC3-Assign3-0.1.0.0-inplace:Assign_3
+       (after 27 tests)
+         Coef 0
+
+  To rerun use: --match "/polyDegree/the nth derivative should not be zero/" --seed 38289366
+
+  test/Spec.hs:167:5: 
+  2) polyDegree the (n+1)th derivative should be zero
+       uncaught exception: ErrorCall
+       Zero polynomial is undefined
+       CallStack (from HasCallStack):
+         error, called at src/Assign_3.hs:134:32 in 1JC3-Assign3-0.1.0.0-inplace:Assign_3
+       (after 27 tests)
+         Coef 0
+
+  To rerun use: --match "/polyDegree/the (n+1)th derivative should be zero/" --seed 38289366
+
+Randomized with seed 38289366
+
+Finished in 0.3457 seconds
+13 examples, 2 failures
+Test suite 1JC3-Assign3-test: FAIL
+Test suite logged to: /Users/ameyagupta/Desktop/repos/compsci-1jc3/1JC3-Assign3/dist-newstyle/build/aarch64-osx/ghc-9.4.8/1JC3-Assign3-0.1.0.0/t/1JC3-Assign3-test/test/1JC3-Assign3-0.1.0.0-1JC3-Assign3-test.log
