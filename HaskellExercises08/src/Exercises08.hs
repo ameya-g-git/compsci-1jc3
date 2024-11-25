@@ -1,15 +1,15 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-|
-Module      : HaskellExercises08.Exercises08
-Copyright   :  (c) Curtis D'Alves 2020
-License     :  GPL (see the LICENSE file)
-Maintainer  :  none
-Stability   :  experimental
-Portability :  portable
 
-Description:
-  Haskell exercise template Set 08 - McMaster CS 1JC3 2021
--}
+-- |
+-- Module      : HaskellExercises08.Exercises08
+-- Copyright   :  (c) Curtis D'Alves 2020
+-- License     :  GPL (see the LICENSE file)
+-- Maintainer  :  none
+-- Stability   :  experimental
+-- Portability :  portable
+--
+-- Description:
+--   Haskell exercise template Set 08 - McMaster CS 1JC3 2021
 module Exercises08 where
 
 -----------------------------------------------------------------------------------------------------------
@@ -22,23 +22,25 @@ module Exercises08 where
 --    SUBMITTING, FAILURE TO DO SO WILL RESULT IN A MARK OF 0
 -- 4) REPLACE macid = "TODO" WITH YOUR ACTUAL MACID (EX. IF YOUR MACID IS jim THEN macid = "jim")
 -----------------------------------------------------------------------------------------------------------
-macid = "TODO"
+macid = "gupta67"
 
-data Nat = Succ Nat
-         | Zero
-  deriving (Show,Eq)
+data Nat
+  = Succ Nat
+  | Zero
+  deriving (Show, Eq)
 
-data Signed a = Positive a
-              | Negative a
-  deriving (Show,Eq)
+data Signed a
+  = Positive a
+  | Negative a
+  deriving (Show, Eq)
 
 instance Num (Signed Nat) where
   (+) = addSNat
   (*) = multSNat
   abs = absSNat
   signum n = case n of
-               (Positive _) -> Positive $ Succ Zero
-               (Negative _) -> Negative $ Succ Zero
+    (Positive _) -> Positive $ Succ Zero
+    (Negative _) -> Negative $ Succ Zero
   fromInteger = intToSNat
   negate = negateSNat
 
@@ -48,14 +50,18 @@ instance Num (Signed Nat) where
 -- NOTE these two functions will be tested together
 -----------------------------------------------------------------------------------------------------------
 sNatToInt :: Signed Nat -> Integer
-sNatToInt (Positive n) = error "TODO: implement sNatToInt"
-sNatToInt (Negative n) = error "TODO: implement sNatToInt"
+sNatToInt (Positive n) = case n of
+  Succ x -> 1 + sNatToInt (Positive x)
+  Zero -> 0
+sNatToInt (Negative n) = case n of
+  Succ x -> sNatToInt (Negative x) - 1
+  Zero -> 0
 
 intToSNat :: Integer -> Signed Nat
 intToSNat n
-  | n == 0     = error "TODO: implement intToSNat"
-  | n < 0      = error "TODO: implement intToSNat"
-  | otherwise  = error "TODO: implement intToSNat"
+  | n == 0 = Positive Zero
+  | n < 0 = Negative (Succ (unwrapSign (intToSNat (n + 1))))
+  | otherwise = Positive (Succ (unwrapSign (intToSNat (n - 1))))
   where
     unwrapSign :: Signed Nat -> Nat
     unwrapSign (Positive n) = n
@@ -68,47 +74,66 @@ intToSNat n
 -----------------------------------------------------------------------------------------------------------
 addSNat :: Signed Nat -> Signed Nat -> Signed Nat
 addSNat (Positive x) (Positive y) =
-  case (x,y) of
-    (Succ n,m) -> error "TODO: implement addSNat"
-    (Zero,m) -> error "TODO: implement addSNat"
+  case (x, y) of
+    (Succ n, m) -> Positive (addNat n m)
+    (Zero, m) -> Positive m
+  where
+    addNat (Succ x) y = Succ (addNat x y)
+    addNat Zero y = Succ y
 addSNat (Positive x) (Negative y) =
-  case (x,y) of
-    (Succ n,Succ m) -> error "TODO: implement addSNat"
-    (Succ n,Zero)   -> error "TODO: implement addSNat"
-    (Zero,m)        -> error "TODO: implement addSNat"
-addSNat (Negative x) (Positive y) = error "TODO: implement addSNat"
+  case (x, y) of
+    (Succ n, Succ m) -> addSNat (Positive n) (Negative m)
+    (Succ n, Zero) -> Positive (Succ n)
+    (Zero, m) -> Negative m
+addSNat (Negative x) (Positive y) = addSNat (Positive y) (Negative x)
 addSNat (Negative x) (Negative y) =
-  case (x,y) of
-    (Succ n,m) -> error "TODO: implement addSNat"
-    (Zero,m)   -> error "TODO: implement addSNat"
+  case (x, y) of
+    (Succ n, m) -> Negative (addNat n m)
+    (Zero, m) -> Negative m
+  where
+    addNat (Succ x) y = Succ (addNat x y)
+    addNat Zero y = Succ y
+
+testAdd x y = sNatToInt (addSNat (intToSNat x) (intToSNat y))
 
 -- Exercise C
 -----------------------------------------------------------------------------------------------------------
 -- Implement the function multSNat that multiples two signed numbers
 -- NOTE first define functions addNat and multNat :: Nat -> Nat -> Nat
 -----------------------------------------------------------------------------------------------------------
+addNat :: Nat -> Nat -> Nat
+addNat a Zero = a
+addNat a (Succ b) = Succ (addNat a b)
+
+multNat :: Nat -> Nat -> Nat
+multNat Zero _ = Zero
+multNat (Succ m) n = addNat (multNat m n) n
+
 multSNat :: Signed Nat -> Signed Nat -> Signed Nat
 multSNat n0 n1 =
-  let
-    addNat (Succ n) m = addNat n (Succ m)
-    addNat Zero m     =  m
+  let addNat (Succ n) m = addNat n (Succ m)
+      addNat Zero m = m
 
-    multNat (Succ n) m = addNat m (multNat n m)
-    multNat Zero m     = Zero
-  in case (n0,n1) of
-       (Positive x, Positive y) -> error "TODO: implement multSNat"
-       (Negative x, Negative y) -> error "TODO: implement multSNat"
-       (Negative x, Positive y) -> error "TODO: implement multSNat"
-       (Positive x, Negative y) -> error "TODO: implement multSNat"
+      multNat (Succ n) m = addNat m (multNat n m)
+      multNat Zero m = Zero
+   in case (n0, n1) of
+        (Positive x, Positive y) -> Positive (multNat x y)
+        (Negative x, Negative y) -> Positive (multNat x y)
+        (Negative x, Positive y) -> Negative (multNat x y)
+        (Positive x, Negative y) -> Negative (multNat x y)
 
 -- Exercise D
 -----------------------------------------------------------------------------------------------------------
 -- Implement the function absSNat that returns the absolute value of a signed number
 -----------------------------------------------------------------------------------------------------------
-absSNat n = error "TODO: implement absSNat"
+absSNat :: Signed Nat -> Signed Nat
+absSNat (Negative x) = Positive x
+absSNat x = x
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------
 -- Implement the function negateSNat that returns the negation (i.e. flips the sign) of a signed number
 -----------------------------------------------------------------------------------------------------------
-negateSNat n = error "TODO: implement negateSNat"
+negateSNat :: Signed Nat -> Signed Nat
+negateSNat (Positive n) = Negative n
+negateSNat (Negative n) = Positive n
