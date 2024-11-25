@@ -117,6 +117,21 @@ gaussCircle vs n
   | n > 0 = [gInt | gInt <- vs, gaussNorm gInt < n]
   | otherwise = error "Norm bound must be nonnegative and not 0"
 
+gold :: Float -> Float
+gold x
+  | x < 0.0 = gold (x / 3)
+  | x == 0.0 = 1.0
+  | x > 0.0 = gold (x / 3)
+
+isPalindrome :: String -> Bool
+isPalindrome [] = True
+isPalindrome [c] = True
+isPalindrome (c : cs) =
+  let ds = reverse cs
+   in if c == head ds
+        then isPalindrome (tail ds)
+        else False
+
 {-
 
  ********** TEST PLAN **********
